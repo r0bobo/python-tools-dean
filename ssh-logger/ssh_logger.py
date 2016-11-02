@@ -3,13 +3,14 @@
 import subprocess
 import json
 import re
-import os
 from datetime import datetime
+from utilities import conf_reader
 
 
 def main():
     """."""
-    json_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'ssh_log.json')
+    config = conf_reader.ConfigReader()
+    json_file = config.get('log_dir')
 
     ssh = LogSSH('/home/dean/auth.log', json_file)
     ssh.load_logdata()
