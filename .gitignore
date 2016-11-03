@@ -1,2 +1,5 @@
 _temp
+lib
+bin
+include
 *.json
