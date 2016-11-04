@@ -5,18 +5,20 @@ import json
 import re
 from copy import deepcopy
 from youtube_dl import YoutubeDL
-
+from python_tools_dean.utilities import conf_reader
 
 def main():
     global downloaded
     downloaded = []
+    config = conf_reader.ConfigReader()
 
-    playlist_url = 'https://www.youtube.com/playlist?list=PL1qRR_Q0qopRh_CE3FvXSFOHohDAYH_GN'
+    # playlist_url = 'https://www.youtube.com/playlist?list=PL1qRR_Q0qopRh_CE3FvXSFOHohDAYH_GN'
+    playlist_url = config.get('youtube_playlist')
 
     home = os.path.expanduser('~/ExternalHDD')
-    download_dir = os.path.join(home, 'Youtube_Videos')
+    download_dir = config.get('download_location') 
 
-    json_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'yt_vids.json')
+    json_file = os.path.join(config.get('log_dir'), 'dl-yt-playlist.json')
 
     if os.path.exists(download_dir):
         videos = YoutubeSync(json_file)
