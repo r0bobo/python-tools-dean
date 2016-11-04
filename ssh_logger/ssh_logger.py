@@ -4,15 +4,15 @@ import subprocess
 import json
 import re
 from datetime import datetime
-from utilities import conf_reader
-
+from python_tools_dean.utilities import conf_reader
 
 def main():
     """."""
     config = conf_reader.ConfigReader()
     json_file = config.get('log_dir')
+    auth_log = config.get('auth_log')
 
-    ssh = LogSSH('/home/dean/auth.log', json_file)
+    ssh = LogSSH(auth_log, json_file)
     ssh.load_logdata()
     ssh.get_geodata()
     ssh.write_log(json_file)

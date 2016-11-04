@@ -2,4 +2,5 @@ _temp
 lib
 bin
 include
+*__pycache__
 *.json
