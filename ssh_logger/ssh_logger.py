@@ -2,6 +2,7 @@
 
 import subprocess
 import json
+import os
 import re
 from datetime import datetime
 from python_tools_dean.utilities import conf_reader
@@ -9,7 +10,7 @@ from python_tools_dean.utilities import conf_reader
 def main():
     """."""
     config = conf_reader.ConfigReader()
-    json_file = config.get('log_dir')
+    json_file = os.path.join(config.get('log_dir'), 'ssh-log.json')
     auth_log = config.get('auth_log')
 
     ssh = LogSSH(auth_log, json_file)
