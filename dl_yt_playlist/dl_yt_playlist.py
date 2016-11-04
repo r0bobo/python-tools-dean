@@ -5,7 +5,7 @@ import json
 import re
 from copy import deepcopy
 from youtube_dl import YoutubeDL
-from python_tools_dean.utilities import conf_reader
+from python_tools_dean import conf_reader
 
 def main():
     global downloaded

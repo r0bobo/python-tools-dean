@@ -5,7 +5,8 @@ import json
 import os
 import re
 from datetime import datetime
-from python_tools_dean.utilities import conf_reader
+from python_tools_dean import conf_reader
+
 
 def main():
     """."""
