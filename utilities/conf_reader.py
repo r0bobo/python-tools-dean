@@ -38,7 +38,12 @@ class ConfigReader:
 
     def get(self, property):
         """Return value of property."""
-        return self.config_data[property]
+        regex = re.compile('^~(\/.*)?$')
+
+        if regex.match(self.config_data[property]):
+            return expanduser(self.config_data[property])
+        else:
+            return self.config_data[property]
 
     def create_default_config(self, config_file):
         """Create default config file."""

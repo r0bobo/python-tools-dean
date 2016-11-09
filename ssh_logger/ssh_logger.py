@@ -41,7 +41,7 @@ class LogSSH:
 
     def load_logdata(self):
         """."""
-        sshd_invalid = re.compile('^(\D{3}) (\d{2}) ([\d\:]{8}).*sshd.*Invalid user (\S*) from ([\w.:]+)')
+        sshd_invalid = re.compile('^(\D{3})\s+(\d{1,2}) ([\d\:]{8}).*sshd.*Invalid user (\S*) from ([\w.:]+)')
 
         with open(self.fil, 'r') as fp:
             for line in fp:
@@ -67,6 +67,7 @@ class LogSSH:
     def get_geodata(self):
         """."""
         for ip in self.log:
+            print(ip)
             if 'hostname' not in self.log[ip]:
                 output = subprocess.check_output(['curl', 'ipinfo.io/%s' % ip])
                 geodata = json.loads(output.decode('UTF-8'))
