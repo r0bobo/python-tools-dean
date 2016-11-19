@@ -1,13 +1,7 @@
 #!/usr/bin/env python3
 
-import conf_reader
 import datetime
-
-
-def main():
-    log = Log()
-    log.successful('ssh_logger')
-    log.failed('dl_yt_playlist')
+from python_tools_dean import conf_reader
 
 
 class Log:
@@ -41,7 +35,3 @@ class Log:
 
     def failed(self, script_name):
         self.write_log(script_name, False)
-
-
-if __name__ == '__main__':
-    main()
