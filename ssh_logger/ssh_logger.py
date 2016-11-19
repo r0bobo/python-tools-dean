@@ -5,20 +5,24 @@ import json
 import os
 import re
 from datetime import datetime
-from python_tools_dean import conf_reader
+from python_tools_dean import conf_reader, log_activity
 
 
 def main():
     """."""
     config = conf_reader.ConfigReader()
+    log = log_activity.Log()
     json_file = os.path.join(config.get('log_dir'), 'ssh-log.json')
     auth_log = config.get('auth_log')
 
-    ssh = LogSSH(auth_log, json_file)
-    ssh.load_logdata()
-    ssh.get_geodata()
-    ssh.write_log(json_file)
-
+    try:
+        ssh = LogSSH(auth_log, json_file)
+        ssh.load_logdata()
+        ssh.get_geodata()
+        ssh.write_log(json_file)
+        log.successful('ssh_logger')
+    except:
+        log.failed('ssh_logger')
 
 class LogSSH:
     """."""
@@ -67,7 +71,6 @@ class LogSSH:
     def get_geodata(self):
         """."""
         for ip in self.log:
-            print(ip)
             if 'hostname' not in self.log[ip]:
                 output = subprocess.check_output(['curl', 'ipinfo.io/%s' % ip])
                 geodata = json.loads(output.decode('UTF-8'))

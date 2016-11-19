@@ -5,28 +5,34 @@ import json
 import re
 from copy import deepcopy
 from youtube_dl import YoutubeDL
-from python_tools_dean import conf_reader
+from python_tools_dean import conf_reader, log_activity
+
 
 def main():
     global downloaded
     downloaded = []
     config = conf_reader.ConfigReader()
+    log = log_activity.Log()
 
     # playlist_url = 'https://www.youtube.com/playlist?list=PL1qRR_Q0qopRh_CE3FvXSFOHohDAYH_GN'
     playlist_url = config.get('youtube_playlist')
 
-    home = os.path.expanduser('~/ExternalHDD')
-    download_dir = config.get('download_location') 
+    download_dir = config.get('download_location')
 
     json_file = os.path.join(config.get('log_dir'), 'dl-yt-playlist.json')
 
     if os.path.exists(download_dir):
-        videos = YoutubeSync(json_file)
+        try:
+            videos = YoutubeSync(json_file)
 
-        videos.sync_playlist(playlist_url)
-        videos.download(download_dir)
-        videos.set_downloaded(downloaded)
-        videos.write_json(json_file)
+            videos.sync_playlist(playlist_url)
+            videos.download(download_dir)
+            videos.set_downloaded(downloaded)
+            videos.write_json(json_file)
+
+            log.successful('dl_yt_playlist')
+        except:
+            log.failed('dl_yt_playlist')
     else:
         print('[error] Download dir \'%s\' does not exist.' % download_dir)
 
