@@ -23,6 +23,7 @@ def main():
         log.successful('ssh_logger')
     except:
         log.failed('ssh_logger')
+    log.write_html()
 
 class LogSSH:
     """."""
@@ -42,7 +43,6 @@ class LogSSH:
                 self.log = dict()
         else:
             self.log = dict()
-
     def load_logdata(self):
         """."""
         sshd_invalid = re.compile('^(\D{3})\s+(\d{1,2}) ([\d\:]{8}).*sshd.*Invalid user (\S*) from ([\w.:]+)')

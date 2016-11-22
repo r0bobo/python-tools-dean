@@ -33,6 +33,7 @@ def main():
             log.successful('dl_yt_playlist')
         except:
             log.failed('dl_yt_playlist')
+        log.write_html()
     else:
         print('[error] Download dir \'%s\' does not exist.' % download_dir)
 
