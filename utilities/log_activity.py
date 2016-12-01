@@ -46,25 +46,25 @@ class Log:
 
 def convert_to_html(input_file, output_file):
     with open(output_file, 'w+') as outfile:
-            outfile.write('<!DOCTYPE html>\n')
-            outfile.write('<html>\n\n')
-            outfile.write('<head>\n')
-            outfile.write('    <title>Python Logs</title>\n\n')
-            outfile.write('    <style>\n')
-            outfile.write('        pre {\n')
-            outfile.write('            color:gray\n')
-            outfile.write('        }\n')
-            outfile.write('    </style>\n')
-            outfile.write('</head>\n\n')
-            outfile.write('<body>\n')
-            outfile.write('    <h1>Python Logs</h1>\n\n')
-            outfile.write('    <hr>\n\n')
-            outfile.write('    <pre>\n')
-            outfile.write('        <samp>\n')
+        outfile.write('<!DOCTYPE html>\n')
+        outfile.write('<html>\n\n')
+        outfile.write('<head>\n')
+        outfile.write('    <title>Python Logs</title>\n\n')
+        outfile.write('    <style>\n')
+        outfile.write('        pre {\n')
+        outfile.write('            color:gray\n')
+        outfile.write('        }\n')
+        outfile.write('    </style>\n')
+        outfile.write('</head>\n\n')
+        outfile.write('<body>\n')
+        outfile.write('    <h1>Python Logs</h1>\n\n')
+        outfile.write('    <hr>\n\n')
+        outfile.write('    <pre>\n')
+        outfile.write('        <samp>\n')
 
         with open(input_file, 'r') as input_file:
             for line in input_file:
-                outfile.write('\t<p>%s</p>' % line.rstrip())
+                outfile.write('%s\n' % line.rstrip())
 
             outfile.write('        </samp>\n')
             outfile.write('    </pre>\n')
