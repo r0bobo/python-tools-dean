@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/r0bobo/python_tools_dean.svg?branch=master)](https://travis-ci.org/r0bobo/python_tools_dean)
+
 # python-tools-dean
 Collection of personal python tools
 
