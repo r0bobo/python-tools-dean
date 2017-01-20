@@ -1,5 +1,0 @@
-#!/usr/bin/env python3
-"""."""
-
-from dean_utils.configreader import ConfigReader
-# from python_tools_dean.utilities import log_activity
