@@ -9,7 +9,10 @@ import sys
 
 def main():
     # Setup logger
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        fmt='%(asctime)s, %(levelname)-9s %(message)s (%(name)s)',
+        datefmt='%Y-%m-%d %H:%M:%S'
+        )
     sh = logging.StreamHandler()
     sh.setLevel(logging.DEBUG)
     sh.setFormatter(formatter)
