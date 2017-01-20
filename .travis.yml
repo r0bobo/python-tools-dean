@@ -7,4 +7,6 @@ install: "pip install -r requirements.txt"
 
 # command to run tests
 script:
-  - pwd
+  - export PATH=$PATH:/home/travis/build/r0bobo
+  - /home/travis/build/r0bobo/python_tools_dean/test/test_configreader.py
+
