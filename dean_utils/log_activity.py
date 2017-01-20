@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
 import datetime
+import logging
+
+from logging.handlers import RotatingFileHandler
 from python_tools_dean import conf_reader
 
+
+# TODO: convert to python logger
 
 class Log:
     """."""
@@ -19,6 +24,24 @@ class Log:
             self.log_file = log_file
         else:
             self.log_file = self.config_reader.get('activity_log')
+
+    def start_logger(self):
+            log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(funcName)s(%(lineno)d) %(message)s')
+
+            logFile = '/home/dean/projects/test.log'
+
+            my_handler = RotatingFileHandler(logFile, mode='a', maxBytes=5*1024*1024,
+                                             backupCount=2, encoding=None, delay=0)
+            my_handler.setFormatter(log_formatter)
+            my_handler.setLevel(logging.INFO)
+
+            app_log = logging.getLogger('root')
+            app_log.setLevel(logging.INFO)
+
+            app_log.addHandler(my_handler)
+
+            while True:
+                app_log.info("data")
 
     def write_log(self, script_name, successful):
         if successful:
@@ -42,7 +65,8 @@ class Log:
             self.html_file = output_file
         else:
             self.html_file = self.config_reader.get('html_log')
-        convert_to_html(self.log_file, self.html_file) 
+        convert_to_html(self.log_file, self.html_file)
+
 
 def convert_to_html(input_file, output_file):
     with open(output_file, 'w+') as outfile:

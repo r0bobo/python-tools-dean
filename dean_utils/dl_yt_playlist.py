@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
-import os
 import json
+import logger
+import os
 import re
+
 from copy import deepcopy
-from youtube_dl import YoutubeDL
 from python_tools_dean import conf_reader, log_activity
+from youtube_dl import YoutubeDL
 
 
 def main():
