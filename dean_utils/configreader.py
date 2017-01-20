@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import logging
 import os
 import collections
 import configparser
@@ -12,8 +13,11 @@ class ConfigReader(configparser.ConfigParser):
     dean.ini file with default values is created if missing.
     """
 
+    logger = []
+
     def __init__(self):
         super().__init__(allow_no_value=True)
+        self.logger = logging.getLogger(__name__)
 
     def readconf(self, filename=None):
         """."""
@@ -36,12 +40,17 @@ class ConfigReader(configparser.ConfigParser):
             config_file = os.path.join(
                 os.path.expanduser('~'), '.config', 'dean', 'dean.ini'
                 )
+            self.logger.debug(
+                'No config file path specificed, using default: {:s}'
+                .format(config_file)
+                )
         else:
             config_file = os.path.expanduser(filename)
 
         try:
             with open(config_file) as fp:
                 super().read_file(fp)
+            self.logger.debug('Finished reading {:s}'.format(config_file))
         except FileNotFoundError:
             super().read_dict(default_config)
             os.makedirs(os.path.dirname(config_file), exist_ok=True)
