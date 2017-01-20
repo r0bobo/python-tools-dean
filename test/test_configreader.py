@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import os
-import python_tools_dean
+import dean_utils
 import shutil
 
 
 def main():
-    config = python_tools_dean.ConfigReader()
+    config = dean_utils.ConfigReader()
     config.readconf()
     shutil.move(os.path.expanduser('~/.config/dean/dean.ini'), os.path.expanduser('~/test.ini'))
     config.readconf(os.path.expanduser('~/test.ini'))
