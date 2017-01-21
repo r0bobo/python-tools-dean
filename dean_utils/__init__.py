@@ -3,6 +3,7 @@
 
 import logging
 from .configreader import ConfigReader
+from .youtubesync import YoutubeSync
 
 
 # Add initiate top level logger
