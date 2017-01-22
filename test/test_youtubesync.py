@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
 import logging
-import os
 import dean_utils
-import shutil
-import sys
 
+# TODO: Create way to specify testing playlists for travis
 
 def main():
     # Setup logger
