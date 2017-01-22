@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-import json
 import logging
+import logging.handlers
 import os
 import re
+import time
 
-from copy import deepcopy
 from dean_utils import ConfigReader
 from youtube_dl import YoutubeDL
 
@@ -19,31 +19,53 @@ class YoutubeSync:
     """Youtube video object."""
 
     config = []
-    video_list = []
-    ydl = []
-    logger = []
-    download_log = []
-    downloaded = []
+    dl_logger = []
     dl_rate = []
+    downloaded = []
+    download_log = []
+    logger = []
+    ydl = []
 
     def __init__(self, config_file=None):
         """."""
         self.logger = logging.getLogger(__name__)
 
+        self.dl_logger = logging.getLogger('youtube_dl')
+        self.dl_logger.setLevel(logging.INFO)
+
+        formatter = logging.Formatter(
+            fmt='%(asctime)s: %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+            )
+
         self.config = ConfigReader()
         self.config.readconf(config_file)
 
-        # self.logger.info('youtube_playlist: {:s}'.format(config['DL-YT-PLAYLIST']['youtube_playlist']))
-        # self.logger.info('download_log: {:s}'.format(config['DL-YT-PLAYLIST']['download_log']))
-        # self.logger.info('download_location: {:s}'.format(config['DL-YT-PLAYLIST']['download_location']))
-        # self.logger.info('download_archive: {:s}'.format(config['DL-YT-PLAYLIST']['download_archive']))
+        # Create folders if missing
+        os.makedirs(os.path.dirname(
+            self.config['DL-YT-PLAYLIST']['download_log']), exist_ok=True
+            )
+        os.makedirs(os.path.dirname(
+            self.config['DL-YT-PLAYLIST']['download_archive']), exist_ok=True
+            )
 
+        rfh = logging.handlers.RotatingFileHandler(
+            self.config['DL-YT-PLAYLIST']['download_log']
+            )
+        rfh.setFormatter(formatter)
+        rfh.setLevel(logging.INFO)
+
+        self.dl_logger.addHandler(rfh)
+
+        # TODO: Rename config file entries to youtubesync?
         ydl_opts = {
             'outtmpl': '[%(uploader)s] %(title)s',
             'logger': self.logger,
             'call_home': False,
-            'download_archive': self.config['DL-YT-PLAYLIST']['download_archive'],
-            'simulate': True,
+            'download_archive':
+                self.config['DL-YT-PLAYLIST']['download_archive'],
+            'ignoreerrors': True,
+            # 'simulate': True,
             'progress_hooks': [self.hook],
         }
 
@@ -51,6 +73,10 @@ class YoutubeSync:
         self.ydl.add_default_info_extractors
 
     def download(self):
+        os.makedirs(
+            self.config['DL-YT-PLAYLIST']['download_location'], exist_ok=True
+                    )
+        os.chdir(self.config['DL-YT-PLAYLIST']['download_location'])
         self.ydl.download([self.config['DL-YT-PLAYLIST']['youtube_playlist']])
         self.log_downloaded()
 
@@ -65,86 +91,36 @@ class YoutubeSync:
                 self.downloaded.append(match.group(1))
 
     def log_downloaded(self):
+        # TODO: Log to both normal text file and ascii-file
+
+        new = {'date': time.strftime('%Y-%m-%d %H:%M:%S')}
+
+        try:
+            new['dl_speed'] = sum(self.dl_rate)/len(self.dl_rate)
+        except:
+            new['dl_speed'] = -1
+
+        try:
+            new['nr_downloaded'] = len(self.downloaded)
+        except:
+            new['nr_downloaded'] = -1
+
+        try:
+            new['videos'] = self.downloaded
+        except:
+            new['videos'] = 'none'
+
         if self.downloaded:
-            print(self.downloaded)
-            print(sum(self.dl_rate)/len(self.dl_rate)/1024**2)
+            msg = ('Downloaded {:d} videos. Average dl speed: {:.2f}MB/s'
+                   .format(len(self.downloaded),
+                           sum(self.dl_rate)/len(self.dl_rate)/1024**2,
+                           )
+                   )
+            for s in self.downloaded:
+                msg += '\n        {:s}'.format(s)
 
-
-        # print(mean(dl_rate))
-
-        # if filename:
-        #     try:
-        #         with open(filename) as fp:
-        #             self.video_list = json.load(fp)
-        #     except FileNotFoundError:
-        #         self.video_list = dict()filepath
-        # else:
-        #     self.video_list = dict()
-
-#     def add(self, id, title):
-#         """."""
-#         if id not in self.video_list:
-#             self.video_list[id] = dict()
-#             self.video_list[id]['title'] = title
-#             self.video_list[id]['downloaded'] = False
-#         else:
-#             print('[index] %s already added. Skipping.' % title)
-#
-#     def download(self, dl_dir):
-#         """."""
-#         dl_vids = []
-#
-#         os.chdir(dl_dir)
-#
-#         for video_id in self.video_list:
-#             if not self.video_list[video_id]['downloaded']:
-#                 dl_vids.append('https://www.youtube.com/watch?v=%s' % video_id)
-#
-#         try:
-#             self.ydl.download(dl_vids)
-#         except ContentTooShortError:
-#             pass
-#
-#     def sync_playlist(self, playlist_url):
-#         """."""
-#         playlist = self.ydl.extract_info(playlist_url, download=False)
-#
-#         for var in playlist['entries']:
-#             self.add(var['webpage_url_basename'], var['title'])
-#
-#         # Remove videos from local database that are not in youtube playlist
-#         video_list = deepcopy(self.video_list)
-#         for id_loc in self.video_list.keys():
-#             if id_loc not in [ids_new['webpage_url_basename'] for ids_new in playlist['entries']]:
-#                 print('[cleaning] %s removed from youtube playlist.' % self.video_list[id_loc]['title'])
-#                 video_list.pop(id_loc, None)
-#         self.video_list = video_list
-#
-#     def set_downloaded(self, id_list):
-#         """."""
-#         for id in id_list:
-#             self.video_list[id]['downloaded'] = True
-#             print('[downloaded] %s set to downloaded.' % self.video_list[id]['title'])
-#
-#     def write_json(self, filename):
-#         """."""
-#         with open(filename, 'w+') as file:
-#             json.dump(self.video_list, file, sort_keys=True, indent=4)
-#
-#
-# def download_hook(d):
-#     """."""
-#     global downloaded
-#
-#     pattern = re.compile('.+\-[\w-]{11}')
-#
-#     if d['status'] == 'finished':
-#         # TODO: Find more robust way to find url_basename?
-#         for seg in reversed(d['filename'].split('.')):
-#             if pattern.match(seg):
-#                 print('[debug] %s' % seg[-11:])
-#                 downloaded.append(seg[-11:])
-#                 break
+            print(msg)
+            self.dl_logger.info(msg)
 
 
 if __name__ == '__main__':
