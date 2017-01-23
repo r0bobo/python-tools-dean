@@ -82,7 +82,7 @@ class YoutubeSync:
         # self.log_downloaded()
 
     def hook(self, d):
-        pattern = re.compile('^(.*)\\.\\w*$')
+        # pattern = re.compile('^(.*)\\.\\w*$')
         
         # self.logger.info(d)
 
@@ -93,9 +93,10 @@ class YoutubeSync:
                 pass
         elif d['status'] == 'finished':
             self.logger.info(d)
-            match = pattern.match(d['filename'])
-            if match.group(1) not in self.downloaded:
-                self.downloaded.append(match.group(1))
+            self.downloaded.append(d['filename'])
+            # match = pattern.match(d['filename'])
+            # if match.group(1) not in self.downloaded:
+            #     self.downloaded.append(match.group(1))
 
     def log_downloaded(self):
         # TODO: Log to both normal text file and ascii-file
