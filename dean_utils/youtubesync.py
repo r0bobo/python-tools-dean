@@ -65,7 +65,7 @@ class YoutubeSync:
             'download_archive':
                 self.config['DL-YT-PLAYLIST']['download_archive'],
             'ignoreerrors': True,
-            'socket_timeout', 10,
+            'socket_timeout': 10,
             # 'simulate': True,
             'progress_hooks': [self.hook],
         }
