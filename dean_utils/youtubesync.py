@@ -128,6 +128,9 @@ class YoutubeSync:
 
             # print(msg)
             # self.dl_logger.info(msg)
+            
+        self.downloaded = []
+        self.dl_rate = []
 
 
 if __name__ == '__main__':
