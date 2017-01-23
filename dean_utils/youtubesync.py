@@ -78,7 +78,7 @@ class YoutubeSync:
                     )
         os.chdir(self.config['DL-YT-PLAYLIST']['download_location'])
         self.ydl.download([self.config['DL-YT-PLAYLIST']['youtube_playlist']])
-        self.log_downloaded()
+        # self.log_downloaded()
 
     def hook(self, d):
         pattern = re.compile('^(.*)\\.\\w*$')
