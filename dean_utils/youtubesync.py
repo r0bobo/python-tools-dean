@@ -105,7 +105,7 @@ class YoutubeSync:
                    'nr_downloaded': len(self.downloaded),
                    }
 
-        self.logger.info(json.dumps(dl_info, indent=4)
+        self.logger.info(json.dumps(dl_info, indent=4))
 
         try:
             new['dl_speed'] = sum(self.dl_rate)/len(self.dl_rate)
