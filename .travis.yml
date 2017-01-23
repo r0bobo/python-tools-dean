@@ -12,4 +12,3 @@ script:
   - export PYTHONPATH=$PYTHONPATH:/home/travis/build/r0bobo/python_tools_dean
   - /home/travis/build/r0bobo/python_tools_dean/test/test_configreader.py
   - /home/travis/build/r0bobo/python_tools_dean/test/test_youtubesync.py
-  - youtube-dl --version
