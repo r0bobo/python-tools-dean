@@ -75,6 +75,7 @@ class YoutubeSync:
         self.ydl.add_default_info_extractors
 
     def download(self):
+        self.logger.info('Downloading playlist: {:s}'.format(self.config['DL-YT-PLAYLIST']['youtube_playlist']))
         os.makedirs(
             self.config['DL-YT-PLAYLIST']['download_location'], exist_ok=True
                     )
