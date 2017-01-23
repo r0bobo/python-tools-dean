@@ -95,7 +95,7 @@ class YoutubeSync:
     def log_downloaded(self):
         # TODO: Log to both normal text file and ascii-file
 
-        self.logger.info(self.downloaded)
+        self.logger.info("Log downloaded files")
         
         new = {'date': time.strftime('%Y-%m-%d %H:%M:%S')}
 
@@ -120,10 +120,12 @@ class YoutubeSync:
                            sum(self.dl_rate)/len(self.dl_rate)/1024**2,
                            )
                    )
+            self.logger.info(msg)
             for s in self.downloaded:
                 msg += '\n        {:s}'.format(s)
+                self.logger.debug(msg)
 
-            self.dl_logger.info(msg)
+            self.dl_logger.debug(msg)
 
 
 if __name__ == '__main__':
