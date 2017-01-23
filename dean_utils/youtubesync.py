@@ -84,10 +84,12 @@ class YoutubeSync:
         pattern = re.compile('^(.*)\\.\\w*$')
         
         self.logger.info(d)
-        print(d)
 
         if d['status'] == 'downloading':
-            self.dl_rate.append(float(d['speed']))
+            try:
+                self.dl_rate.append(float(d['speed']))
+            except Exception as e:
+                self.logger.exception(e)
         elif d['status'] == 'finished':
             match = pattern.match(d['filename'])
             if match.group(1) not in self.downloaded:
