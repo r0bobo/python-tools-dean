@@ -127,7 +127,7 @@ class YoutubeSync:
                 msg += '\n        {:s}'.format(s)
 
             # print(msg)
-            # self.dl_logger.info(msg)
+            self.dl_logger.info(msg)
             
         self.downloaded = []
         self.dl_rate = []
