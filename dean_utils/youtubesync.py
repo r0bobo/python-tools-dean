@@ -100,6 +100,9 @@ class YoutubeSync:
     def log_downloaded(self):
         # TODO: Log to both normal text file and ascii-file
 
+        self.logger.info(self.downloaded)
+        self.logger.info(self.dl_rate)
+        
         new = {'date': time.strftime('%Y-%m-%d %H:%M:%S')}
 
         try:
