@@ -3,7 +3,9 @@ python:
   - "3.6"
 
 # command to install dependencies
-install: "pip install -r requirements.txt"
+install:
+  - "pip install -r requirements.txt"
+  - "pip install --upgrade youtube-dl"
 
 # command to run tests
 script:
