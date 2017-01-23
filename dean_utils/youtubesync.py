@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import logging
 import logging.handlers
 import os
@@ -84,8 +85,6 @@ class YoutubeSync:
     def hook(self, d):
         # pattern = re.compile('^(.*)\\.\\w*$')
         
-        self.logger.info(d)
-
         if d['status'] == 'downloading':
             try:
                 self.dl_rate.append(float(d['speed']))
@@ -93,6 +92,7 @@ class YoutubeSync:
                 pass
         elif d['status'] == 'finished':
             self.downloaded.append(d['filename'])
+            self.logger.info(json.dumps(d, indent=4))
             # match = pattern.match(d['filename'])
             # if match.group(1) not in self.downloaded:
             #     self.downloaded.append(match.group(1))
