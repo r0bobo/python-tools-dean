@@ -103,6 +103,7 @@ class YoutubeSync:
                    'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                    'dl_speed': sum(self.dl_rate)/len(self.dl_rate),
                    'nr_downloaded': len(self.downloaded),
+                   'videos': self.downloaded
                    }
 
         self.logger.info(json.dumps(dl_info, indent=4))
