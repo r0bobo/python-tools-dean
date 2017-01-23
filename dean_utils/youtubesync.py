@@ -125,7 +125,7 @@ class YoutubeSync:
                 msg += '\n        {:s}'.format(s)
                 self.logger.debug(msg)
 
-            self.dl_logger.debug(msg)
+            self.dl_logger.info(msg)
 
 
 if __name__ == '__main__':
