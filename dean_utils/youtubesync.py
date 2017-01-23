@@ -85,16 +85,13 @@ class YoutubeSync:
     def hook(self, d):
         # pattern = re.compile('^(.*)\\.\\w*$')
         
-        self.logger.info(self.downloaded)
-        self.logger.info(self.dl_rate)
-
-        
         if d['status'] == 'downloading':
             try:
                 self.dl_rate.append(float(d['speed']))
             except TypeError:
                 pass
         elif d['status'] == 'finished':
+            self.logger.info('DL_LOG: {}'.format(self.downloaded))
             self.downloaded.append(d['filename'])
             self.logger.info(json.dumps(d, indent=4))
             # match = pattern.match(d['filename'])
