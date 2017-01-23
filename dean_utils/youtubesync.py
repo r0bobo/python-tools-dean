@@ -133,11 +133,8 @@ class YoutubeSync:
             # print(msg)
             self.dl_logger.info(msg)
             
-        self.downloaded = []
-        self.dl_rate = []
-        
-        self.logger.info(self.downloaded)
-        self.logger.info(self.dl_rate)
+        self.downloaded = None
+        self.dl_rate = None
 
 
 if __name__ == '__main__':
