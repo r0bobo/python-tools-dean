@@ -92,7 +92,6 @@ class YoutubeSync:
             except TypeError:
                 pass
         elif d['status'] == 'finished':
-            self.logger.info(d)
             self.downloaded.append(d['filename'])
             # match = pattern.match(d['filename'])
             # if match.group(1) not in self.downloaded:
