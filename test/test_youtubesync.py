@@ -12,14 +12,14 @@ def main():
         datefmt='%Y-%m-%d %H:%M:%S'
         )
     sh = logging.StreamHandler()
-    sh.setLevel(logging.INFO)
+    sh.setLevel(logging.DEBUG)
     sh.setFormatter(formatter)
 
     logging.getLogger('dean_utils').setLevel(logging.DEBUG)
     logging.getLogger('dean_utils').addHandler(sh)
 
     test_logger = logging.getLogger('test_dl_yt_playlist')
-    test_logger.setLevel(logging.INFO)
+    test_logger.setLevel(logging.DEBUG)
     test_logger.addHandler(sh)
 
     # Test ConfigReader
