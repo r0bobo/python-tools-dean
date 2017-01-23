@@ -23,10 +23,10 @@ def main():
     test_logger.addHandler(sh)
 
     # Test ConfigReader
-    # ydl1 = dean_utils.YoutubeSync(
-    #     '/home/travis/build/r0bobo/python_tools_dean/test/test1.ini'
-    #     )
-    # ydl1.download()
+    ydl1 = dean_utils.YoutubeSync(
+        '/home/travis/build/r0bobo/python_tools_dean/test/test1.ini'
+        )
+    ydl1.download()
     ydl2 = dean_utils.YoutubeSync(
         '/home/travis/build/r0bobo/python_tools_dean/test/test2.ini'
         )
