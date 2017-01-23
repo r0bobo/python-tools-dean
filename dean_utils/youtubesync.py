@@ -85,6 +85,10 @@ class YoutubeSync:
     def hook(self, d):
         # pattern = re.compile('^(.*)\\.\\w*$')
         
+        self.logger.info(self.downloaded)
+        self.logger.info(self.dl_rate)
+
+        
         if d['status'] == 'downloading':
             try:
                 self.dl_rate.append(float(d['speed']))
