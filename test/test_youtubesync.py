@@ -23,14 +23,14 @@ def main():
     test_logger.addHandler(sh)
 
     # Test ConfigReader
-    ydl1 = dean_utils.YoutubeSync(
-        '/home/travis/build/r0bobo/python_tools_dean/test/test1.ini'
-        )
-    ydl1.download()
-    # ydl2 = dean_utils.YoutubeSync(
-    #     '/home/travis/build/r0bobo/python_tools_dean/test/test2.ini'
+    # ydl1 = dean_utils.YoutubeSync(
+    #     '/home/travis/build/r0bobo/python_tools_dean/test/test1.ini'
     #     )
-    # ydl2.download()
+    # ydl1.download()
+    ydl2 = dean_utils.YoutubeSync(
+        '/home/travis/build/r0bobo/python_tools_dean/test/test2.ini'
+        )
+    ydl2.download()
 
 
 if __name__ == '__main__':
