@@ -93,8 +93,8 @@ class YoutubeSync:
         elif d['status'] == 'finished':
             self.logger.info('DL_LOG: Before: {}'.format(self.downloaded))
             self.logger.info('DL_LOG: Appending {}'.format(d['filename']))
-            self.logger.info('DL_LOG: After: {}\n\n'.format(self.downloaded))
             self.downloaded.append(d['filename'])
+            self.logger.info('DL_LOG: After: {}\n\n'.format(self.downloaded))
             # self.logger.info(json.dumps(d, indent=4))
             # match = pattern.match(d['filename'])
             # if match.group(1) not in self.downloaded:
