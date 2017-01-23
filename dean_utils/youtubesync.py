@@ -19,16 +19,16 @@ def main():
 class YoutubeSync:
     """Youtube video object."""
 
-    config = []
-    dl_logger = []
-    dl_rate = []
-    downloaded = []
-    download_log = []
-    logger = []
-    ydl = []
-
     def __init__(self, config_file=None):
         """."""
+        self.config = []
+        self.dl_logger = []
+        self.dl_rate = []
+        self.downloaded = []
+        self.download_log = []
+        self.logger = []
+        self.ydl = []
+
         self.logger = logging.getLogger(__name__)
 
         self.dl_logger = logging.getLogger('youtube_dl')
@@ -135,8 +135,6 @@ class YoutubeSync:
             # print(msg)
             self.dl_logger.info(msg)
             
-        self.downloaded = None
-        self.dl_rate = None
         self.logger.info('\nClearing variables\n')
         self.logger.info(self.downloaded)
 
