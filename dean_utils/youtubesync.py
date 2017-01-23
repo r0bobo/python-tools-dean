@@ -84,22 +84,13 @@ class YoutubeSync:
         self.log_downloaded()
 
     def hook(self, d):
-        # pattern = re.compile('^(.*)\\.\\w*$')
-        
         if d['status'] == 'downloading':
             try:
                 self.dl_rate.append(float(d['speed']))
             except TypeError:
                 pass
         elif d['status'] == 'finished':
-            self.logger.info('DL_LOG: Before: {}'.format(self.downloaded))
-            self.logger.info('DL_LOG: Appending {}'.format(d['filename']))
             self.downloaded.append(d['filename'])
-            self.logger.info('DL_LOG: After: {}\n\n'.format(self.downloaded))
-            # self.logger.info(json.dumps(d, indent=4))
-            # match = pattern.match(d['filename'])
-            # if match.group(1) not in self.downloaded:
-            #     self.downloaded.append(match.group(1))
 
     def log_downloaded(self):
         # TODO: Log to both normal text file and ascii-file
@@ -132,11 +123,7 @@ class YoutubeSync:
             for s in self.downloaded:
                 msg += '\n        {:s}'.format(s)
 
-            # print(msg)
             self.dl_logger.info(msg)
-            
-        self.logger.info('\nClearing variables\n')
-        self.logger.info(self.downloaded)
 
 
 if __name__ == '__main__':
