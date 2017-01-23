@@ -84,7 +84,7 @@ class YoutubeSync:
     def hook(self, d):
         # pattern = re.compile('^(.*)\\.\\w*$')
         
-        # self.logger.info(d)
+        self.logger.info(d)
 
         if d['status'] == 'downloading':
             try:
@@ -126,8 +126,8 @@ class YoutubeSync:
             for s in self.downloaded:
                 msg += '\n        {:s}'.format(s)
 
-            print(msg)
-            self.dl_logger.info(msg)
+            # print(msg)
+            # self.dl_logger.info(msg)
 
 
 if __name__ == '__main__':
