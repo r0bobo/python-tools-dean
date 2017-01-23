@@ -89,8 +89,8 @@ class YoutubeSync:
         if d['status'] == 'downloading':
             try:
                 self.dl_rate.append(float(d['speed']))
-            except Exception as e:
-                self.logger.exception(e)
+            except TypeError:
+                pass
         elif d['status'] == 'finished':
             match = pattern.match(d['filename'])
             if match.group(1) not in self.downloaded:
