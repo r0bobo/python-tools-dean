@@ -24,6 +24,7 @@ class YoutubeSync:
     def __init__(self, config_file=None):
         """."""
         self.config = []
+        self.dl_logger = []
         self.dl_rate = []
         self.downloaded = []
         self.download_log = []
@@ -59,7 +60,7 @@ class YoutubeSync:
             'download_archive':
                 self.config[self.config_key]['download_archive'],
             'ignoreerrors': True,
-            'socket_timeout': '10',
+            'socket_timeout': 10,
             # 'simulate': True,
             'progress_hooks': [self.hook],
         }
