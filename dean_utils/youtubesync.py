@@ -19,20 +19,22 @@ def main():
 class YoutubeSync:
     """Youtube video object."""
 
+    config_key = 'DL-YT-PLAYLIST'
+
     def __init__(self, config_file=None):
         """."""
         self.config = []
-        self.dl_logger = []
         self.dl_rate = []
         self.downloaded = []
         self.download_log = []
         self.logger = []
         self.ydl = []
 
-        self.logger = logging.getLogger(__name__)
+        self.dl_location = []
+        self.dl_archive = []
+        self.dl_log = []
 
-        self.dl_logger = logging.getLogger('youtube_dl')
-        self.dl_logger.setLevel(logging.INFO)
+        self.logger = logging.getLogger(__name__)
 
         formatter = logging.Formatter(
             fmt='%(asctime)s: %(message)s',
@@ -42,21 +44,12 @@ class YoutubeSync:
         self.config = ConfigReader()
         self.config.readconf(config_file)
 
-        # Create folders if missing
-        os.makedirs(os.path.dirname(
-            self.config['DL-YT-PLAYLIST']['download_log']), exist_ok=True
-            )
-        os.makedirs(os.path.dirname(
-            self.config['DL-YT-PLAYLIST']['download_archive']), exist_ok=True
-            )
-
-        rfh = logging.handlers.RotatingFileHandler(
-            self.config['DL-YT-PLAYLIST']['download_log']
-            )
-        rfh.setFormatter(formatter)
-        rfh.setLevel(logging.INFO)
-
-        self.dl_logger.addHandler(rfh)
+        try:
+            self.dl_location = self.config[self.config_key]['download_location']
+            self.dl_archive = self.config[self.config_key]['download_archive']
+            self.dl_log = self.config[self.config_key]['download_log']
+        except:
+            self.logger.error('Could not read config file')
 
         # TODO: Rename config file entries to youtubesync?
         ydl_opts = {
@@ -64,7 +57,7 @@ class YoutubeSync:
             'logger': self.logger,
             'call_home': False,
             'download_archive':
-                self.config['DL-YT-PLAYLIST']['download_archive'],
+                self.config[self.config_key]['download_archive'],
             'ignoreerrors': True,
             'socket_timeout': '10',
             # 'simulate': True,
@@ -74,14 +67,20 @@ class YoutubeSync:
         self.ydl = YoutubeDL(ydl_opts)
         self.ydl.add_default_info_extractors
 
-    def download(self):
-        self.logger.info('Downloading playlist: {:s}'.format(self.config['DL-YT-PLAYLIST']['youtube_playlist']))
-        os.makedirs(
-            self.config['DL-YT-PLAYLIST']['download_location'], exist_ok=True
-                    )
-        os.chdir(self.config['DL-YT-PLAYLIST']['download_location'])
-        self.ydl.download([self.config['DL-YT-PLAYLIST']['youtube_playlist']])
-        self.log_downloaded()
+    def download(self, youtube_playlist=None):
+        "Download videos in specified youtube_playlist."
+        if youtube_playlist:
+            os.makedirs(self.dl_location, exist_ok=True)
+            os.makedirs(os.path.dirname(self.dl_archive), exist_ok=True)
+
+            self.logger.info('Downloading playlist: {:s}'
+                             .format(youtube_playlist)
+                             )
+            os.chdir(self.dl_location)
+            self.ydl.download([youtube_playlist])
+            self.log_downloaded()
+        else:
+            self.logger.error('No youtube playlist specified')
 
     def hook(self, d):
         if d['status'] == 'downloading':
@@ -90,51 +89,56 @@ class YoutubeSync:
             except TypeError:
                 pass
         elif d['status'] == 'finished':
-            self.downloaded.append(d['filename'])
+            # HACK: Find more elegant solution to avoid double files
+            # TODO: Is capturing f\d{3} enough to cover all cases?
+            ext = re.compile('(^.*)\\.f\\d{3}$')
+            fn = ext.match(d['filename'])
+            if fn:
+                filename = fn.group(1)
+            else:
+                filename = d['filename']
+            if filename not in self.downloaded:
+                self.downloaded.append(filename)
 
     def log_downloaded(self):
-        # TODO: Log to both normal text file and ascii-file
-
-        self.logger.info("Log downloaded files")
-
-        new = {'date': time.strftime('%Y-%m-%d %H:%M:%S')}
-
-        dl_info = {
-                   'date': time.strftime('%Y-%m-%d %H:%M:%S'),
-                   'dl_speed': sum(self.dl_rate)/len(self.dl_rate),
-                   'nr_downloaded': len(self.downloaded),
-                   'videos': self.downloaded
-                   }
-
-        self.logger.info(json.dumps(dl_info, indent=4))
-
-        try:
-            new['dl_speed'] = sum(self.dl_rate)/len(self.dl_rate)
-        except:
-            new['dl_speed'] = -1
-
-        try:
-            new['nr_downloaded'] = len(self.downloaded)
-        except:
-            new['nr_downloaded'] = -1
-
-        try:
-            new['videos'] = self.downloaded
-        except:
-            new['videos'] = 'none'
+        json_log = []
 
         if self.downloaded:
-            msg = ('Downloaded {:d} videos. Average dl speed: {:.2f}MB/s'
-                   .format(len(self.downloaded),
-                           sum(self.dl_rate)/len(self.dl_rate)/1024**2,
-                           )
-                   )
-            self.logger.info(msg)
-            for s in self.downloaded:
-                msg += '\n        {:s}'.format(s)
-                self.logger.debug(msg)
+            try:
+                dl_speed = sum(self.dl_rate)/len(self.dl_rate)
+            except:
+                dl_speed = -1
 
-            self.dl_logger.info(msg)
+            dl_info = {
+                       'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                       'dl_speed': dl_speed,
+                       'nr_downloaded': len(self.downloaded),
+                       'videos': self.downloaded
+                       }
+
+            try:
+                with open(
+                          self.config[self.config_key]['download_log'], 'r'
+                          ) as fp:
+                    json_log = json.load(fp)
+            except (FileNotFoundError, json.decoder.JSONDecodeError):
+                pass
+
+            json_log.append(dl_info)
+
+            os.makedirs(os.path.dirname(
+                        self.config[self.config_key]['download_log']),
+                        exist_ok=True
+                        )
+            try:
+                with open(
+                          self.config[self.config_key]['download_log'], 'w+'
+                          ) as fp:
+                    json.dump(json_log, fp)
+            except Exception as e:
+                self.logger.exception(e)
+
+        self.downloaded = []
 
 
 if __name__ == '__main__':

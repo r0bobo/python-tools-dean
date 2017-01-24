@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import logging
 import dean_utils
+import logging
 
 # TODO: Create way to specify testing playlists for travis
 
@@ -23,14 +23,9 @@ def main():
     test_logger.addHandler(sh)
 
     # Test ConfigReader
-    ydl1 = dean_utils.YoutubeSync(
-        '/home/travis/build/r0bobo/python_tools_dean/test/test1.ini'
-        )
-    ydl1.download()
-    ydl2 = dean_utils.YoutubeSync(
-        '/home/travis/build/r0bobo/python_tools_dean/test/test2.ini'
-        )
-    ydl2.download()
+    ydl = dean_utils.YoutubeSync()
+    ydl.download('https://www.youtube.com/playlist?list=PL1qRR_Q0qopRDY2kqz2FtCCJijs7GxAQf')
+    ydl.download('https://www.youtube.com/playlist?list=PL1qRR_Q0qopRTcoibkO5Ar7wh0iiTewys')
 
 
 if __name__ == '__main__':

@@ -28,17 +28,15 @@ class ConfigReader(configparser.ConfigParser):
             '# general settings': None
             }
         default_config['DL-YT-PLAYLIST'] = {
-            'youtube_playlist': 'https://www.youtube.com/playlist?list=PL1qRR_Q0qopRTcoibkO5Ar7wh0iiTewys',
-            # 'youtube_playlist': 'https://www.youtube.com/playlist?list=PL1qRR_Q0qopRh_CE3FvXSFOHohDAYH_GN',
             'download_location': '{:s}'.format(
                 os.path.join(homedir, 'Downloads', 'Youtube_Videos')),
             'download_log': '{:s}'.format(
                 os.path.join(homedir, '.local', 'share',
-                             'dean', 'youtube_dl.log')
+                             'dean', 'youtube_dl.json')
                              ),
             'download_archive': '{:s}'.format(
                 os.path.join(homedir, '.local', 'share',
-                             'dean', '.download_archive')
+                             'dean', 'download_archive')
                              ),
             }
         default_config['SSH-LOGGER'] = {
