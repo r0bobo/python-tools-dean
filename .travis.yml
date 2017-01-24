@@ -10,6 +10,7 @@ install:
 # command to run tests
 script:
   - export PYTHONPATH=$PYTHONPATH:/home/travis/build/r0bobo/python_tools_dean
-  - /home/travis/build/r0bobo/python_tools_dean/test/test_configreader.py
-  - /home/travis/build/r0bobo/python_tools_dean/test/test_youtubesync.py
-  - cat /home/travis/.local/share/dean/youtube_dl.json
+  - ./test/test_all.py
+  - echo "travis_fold:start:NAME"
+  - cat ~/dean_utils_test.log
+  - echo "travis_fold:end:NAME"
