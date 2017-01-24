@@ -11,6 +11,7 @@ install:
 script:
   - export PYTHONPATH=$PYTHONPATH:/home/travis/build/r0bobo/python_tools_dean
   - ./test/test_all.py
+  - echo "Test log:"
   - echo "travis_fold:start:NAME"
   - cat ~/dean_utils_test.log
   - echo "travis_fold:end:NAME"
