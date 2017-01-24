@@ -140,7 +140,7 @@ class YoutubeSync:
             try:
                 with open(self.dl_log, 'r') as fp:
                     json_log = json.load(fp)
-            except (FileNotFoundError, json.decoder.JSONDecodeError):
+            except (FileNotFoundError, ValueError):
                 pass
 
             json_log.append(dl_info)
