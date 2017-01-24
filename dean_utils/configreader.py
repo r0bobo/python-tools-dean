@@ -25,7 +25,8 @@ class ConfigReader(configparser.ConfigParser):
 
         default_config = collections.OrderedDict()
         default_config['GENERAL'] = {
-            '# general settings': None
+            'debug': 'test',
+            '# general settings': None,
             }
         default_config['DL-YT-PLAYLIST'] = {
             'download_location': '{:s}'.format(

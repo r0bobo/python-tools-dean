@@ -90,7 +90,6 @@ class YoutubeSync:
             except TypeError:
                 pass
         elif d['status'] == 'finished':
-            # HACK: Find more elegant solution to avoid double files
             # TODO: Is capturing f\d{3} enough to cover all cases?
             ext = re.compile('(^.*)\\.f\\d{3}$')
             fn = ext.match(d['filename'])
