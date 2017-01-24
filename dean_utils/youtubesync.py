@@ -118,24 +118,20 @@ class YoutubeSync:
                        }
 
             try:
-                with open(
-                          self.config[self.config_key]['download_log'], 'r'
-                          ) as fp:
+                with open(self.download_log, 'r') as fp:
                     json_log = json.load(fp)
             except (FileNotFoundError, json.decoder.JSONDecodeError):
                 pass
 
             json_log.append(dl_info)
 
-            os.makedirs(os.path.dirname(
-                        self.config[self.config_key]['download_log']),
-                        exist_ok=True
-                        )
+            os.makedirs(os.path.dirname(self.download_log), exist_ok=True)
             try:
-                with open(
-                          self.config[self.config_key]['download_log'], 'w+'
-                          ) as fp:
+                with open(self.download_log, 'w+') as fp:
                     json.dump(json_log, fp)
+                self.logger.debug('Writing info to download log: {:s}'
+                                  .format(self.download_log)
+                                  )
             except Exception as e:
                 self.logger.exception(e)
 
