@@ -73,7 +73,7 @@ class YoutubeSync:
 
         # TODO: Rename config file entries to youtubesync?
         ydl_opts = {
-            'outtmpl': '[%(uploader)s] %(title)s',
+            'outtmpl': '[%(uploader)s] %(title)s.%(ext)s',
             'logger': self.logger,
             'call_home': False,
             'download_archive':
