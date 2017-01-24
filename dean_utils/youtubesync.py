@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 import json
 import logging
 import logging.handlers
@@ -12,8 +13,31 @@ from youtube_dl import YoutubeDL
 
 
 def main():
-    # TODO: Use argparse to take input arguments
-    pass
+    parser = argparse.ArgumentParser(
+        description="Download videos from playlist"
+        )
+    parser.add_argument('playlist', type=str, help='Youtube playlist url')
+    parser.add_argument(
+        '-c', '--cfg', type=str, nargs=1,
+        dest='config_file', default=None,
+        help='Path to config file (default: ~/.config/dean/dean.ini)'
+        )
+    args = vars(parser.parse_args())
+
+    formatter = logging.Formatter(
+        fmt='%(asctime)-22s %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+        )
+
+    sh = logging.StreamHandler()
+    sh.setLevel(logging.INFO)
+    sh.setFormatter(formatter)
+
+    logging.getLogger(__name__).setLevel(logging.INFO)
+    logging.getLogger(__name__).addHandler(sh)
+
+    ys = YoutubeSync(config_file=args['config_file'])
+    ys.download(args['playlist'])
 
 
 class YoutubeSync:
@@ -36,11 +60,6 @@ class YoutubeSync:
         self.dl_log = []
 
         self.logger = logging.getLogger(__name__)
-
-        formatter = logging.Formatter(
-            fmt='%(asctime)s: %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
-            )
 
         self.config = ConfigReader()
         self.config.readconf(config_file)
@@ -69,7 +88,7 @@ class YoutubeSync:
         self.ydl.add_default_info_extractors
 
     def download(self, youtube_playlist=None):
-        "Download videos in specified youtube_playlist."
+        """Download videos in specified youtube_playlist."""
         if youtube_playlist:
             os.makedirs(self.dl_location, exist_ok=True)
             os.makedirs(os.path.dirname(self.dl_archive), exist_ok=True)
@@ -87,7 +106,7 @@ class YoutubeSync:
         if d['status'] == 'downloading':
             try:
                 self.dl_rate.append(float(d['speed']))
-            except TypeError:
+            except (TypeError, KeyError):
                 pass
         elif d['status'] == 'finished':
             # TODO: Is capturing f\d{3} enough to cover all cases?
@@ -97,7 +116,9 @@ class YoutubeSync:
                 filename = fn.group(1)
             else:
                 filename = d['filename']
+
             if filename not in self.downloaded:
+                self.logger.info('Finished downloading {:s}'.format(filename))
                 self.downloaded.append(filename)
 
     def log_downloaded(self):
